@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hexed - Minecraft Client</title>
+    <title>Hexed 1.20.5 Client</title>
     <style>
         * {
             margin: 0;
@@ -310,7 +310,7 @@
 </head>
 <body>
     <div class="header">
-        <div class="logo">⬡ HEXED</div>
+        <div class="logo">⬡ HEXED 1.20.5</div>
         <div class="status">
             <div class="status-indicator"></div>
             <div class="status-text">ONLINE</div>
@@ -319,7 +319,6 @@
 
     <div class="container">
         <div class="sidebar">
-            <!-- Combat -->
             <div class="module-category">
                 <div class="category-title">Combat</div>
                 <div class="module-item" onclick="toggleModule(this, 'aura')">
@@ -340,7 +339,6 @@
                 </div>
             </div>
 
-            <!-- Movement -->
             <div class="module-category">
                 <div class="category-title">Movement</div>
                 <div class="module-item" onclick="toggleModule(this, 'speed')">
@@ -361,7 +359,6 @@
                 </div>
             </div>
 
-            <!-- Render -->
             <div class="module-category">
                 <div class="category-title">Render</div>
                 <div class="module-item active" onclick="toggleModule(this, 'esp')">
@@ -382,7 +379,6 @@
                 </div>
             </div>
 
-            <!-- Utility -->
             <div class="module-category">
                 <div class="category-title">Utility</div>
                 <div class="module-item" onclick="toggleModule(this, 'autobuild')">
@@ -404,7 +400,7 @@
             <div class="game-viewport">
                 <div class="hud-overlay">
                     <div class="hud-title">HEXED</div>
-                    <div class="hud-version">v0.1.0</div>
+                    <div class="hud-version">v0.1.0 · MC 1.20.5</div>
                     <div class="hud-status">Status: Online</div>
                 </div>
 
@@ -458,7 +454,6 @@
         let frameCount = 0;
         let lastTime = performance.now();
 
-        // Simulate FPS counter
         setInterval(() => {
             const now = performance.now();
             const delta = now - lastTime;
@@ -472,7 +467,6 @@
             }
         }, 16);
 
-        // Simulate player coordinates
         let playerX = 0, playerY = 64, playerZ = 0;
 
         function updateCoordinates() {
@@ -488,7 +482,6 @@
 
         updateCoordinates();
 
-        // Module toggle functionality
         function toggleModule(element, moduleName) {
             element.classList.toggle('active');
             const toggle = element.querySelector('.toggle-switch');
@@ -498,7 +491,6 @@
             console.log(`${moduleName} ${status}`);
         }
 
-        // Settings panel
         function openSettings() {
             document.getElementById('settingsPanel').classList.add('active');
         }
@@ -507,7 +499,6 @@
             document.getElementById('settingsPanel').classList.remove('active');
         }
 
-        // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeSettings();
@@ -517,7 +508,6 @@
             }
         });
 
-        // Apply HUD color changes
         document.getElementById('hudColor').addEventListener('change', (e) => {
             const color = e.target.value;
             const hex = parseInt(color.substring(1), 16);

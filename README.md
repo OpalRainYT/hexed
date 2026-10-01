@@ -1,28 +1,29 @@
 # Hexed
 
-Hexed is a lightweight Minecraft client mod starter built for Fabric 1.20.1.
+Hexed is a Fabric-based Minecraft client mod for Minecraft 1.20.5.
 
 Features:
 - custom HUD overlay
 - toggle keybind (`H`)
-- clean client-only mod structure
+- lightweight client-side UI
+- Fabric mod structure ready for 1.20.5
 
 ## Quick start
 
 1. Install Java 17+
-2. Install Gradle or use the project wrapper if generated later
+2. Open in IntelliJ IDEA or VS Code
 3. Run:
 
 ```bash
-gradle build
+./gradlew build
 ```
 
-4. Launch Minecraft with Fabric Loader and the built JAR in your mods folder.
+4. Launch Minecraft 1.20.5 with Fabric Loader and install the built JAR in your mods folder.
 
 ## Keybinds
 
 - `H` — toggle the Hexed HUD on or off
 
-## Repository
+## Repo
 
 https://github.com/OpalRainYT/hexed

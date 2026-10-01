@@ -3,7 +3,7 @@
   "id": "hexed",
   "version": "${version}",
   "name": "Hexed",
-  "description": "A lightweight Minecraft client mod starter with a custom HUD.",
+  "description": "A Minecraft 1.20.5 client with a lightweight HUD and utility UI.",
   "authors": [
     "OpalRainYT"
   ],
@@ -21,8 +21,8 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.15.0",
-    "minecraft": "1.20.1",
+    "fabricloader": ">=0.16.7",
+    "minecraft": ">=1.20.5",
     "java": ">=17"
   }
 }
