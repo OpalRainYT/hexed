@@ -1,0 +1,13 @@
+# Gradle generated files
+.gradle/
+build/
+.idea/
+*.iml
+
+# Java
+*.class
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
