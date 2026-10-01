@@ -1,518 +1,614 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hexed 1.20.5 Client</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hexed Client</title>
     <style>
-        * {
+        :root {
+            --bg: #0a0f1a;
+            --bg2: #111b2d;
+            --panel: rgba(17, 27, 45, 0.88);
+            --panel-2: rgba(20, 35, 56, 0.9);
+            --line: #1de9b6;
+            --line-soft: rgba(29, 233, 182, 0.35);
+            --text: #e7f9ff;
+            --muted: #9fb8c8;
+            --accent: #1de9b6;
+            --accent-2: #7ef9d6;
+            --warning: #ffcc66;
+            --danger: #ff6b6b;
+            --shadow: rgba(5, 10, 19, 0.75);
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
             margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: radial-gradient(circle at top, #17263d, var(--bg) 42%);
+            color: var(--text);
+            overflow: hidden;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #e0e0e0;
-            overflow: hidden;
-            height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
-        .header {
-            background: rgba(0, 0, 0, 0.5);
-            padding: 15px 20px;
-            border-bottom: 2px solid #00ffaa;
+        .topbar {
+            height: 62px;
+            background: rgba(7, 11, 19, 0.96);
+            border-bottom: 1px solid var(--line-soft);
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            padding: 0 18px;
+            box-shadow: 0 8px 24px var(--shadow);
         }
 
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #00ffaa;
-            text-shadow: 0 0 10px #00ffaa;
-        }
-
-        .status {
+        .brand {
             display: flex;
+            align-items: center;
             gap: 10px;
-            align-items: center;
-        }
-
-        .status-indicator {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #7cff93;
-            box-shadow: 0 0 5px #7cff93;
-        }
-
-        .status-text {
-            font-size: 14px;
-            color: #7cff93;
-        }
-
-        .container {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .sidebar {
-            width: 250px;
-            background: rgba(0, 0, 0, 0.3);
-            border-right: 1px solid #00ffaa;
-            overflow-y: auto;
-            padding: 15px;
-        }
-
-        .module-category {
-            margin-bottom: 20px;
-        }
-
-        .category-title {
-            color: #00ffaa;
-            font-size: 12px;
-            font-weight: bold;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: var(--accent-2);
             text-transform: uppercase;
-            margin-bottom: 10px;
-            padding: 5px;
-            border-left: 3px solid #00ffaa;
-            padding-left: 8px;
         }
 
-        .module-item {
-            background: rgba(0, 255, 170, 0.1);
-            margin: 8px 0;
-            padding: 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 14px;
-        }
-
-        .module-item:hover {
-            background: rgba(0, 255, 170, 0.2);
-            transform: translateX(5px);
-        }
-
-        .module-item.active {
-            background: rgba(0, 255, 170, 0.3);
-            border-left: 3px solid #00ffaa;
-            padding-left: 7px;
-        }
-
-        .toggle-switch {
-            width: 30px;
-            height: 16px;
-            background: #444;
-            border-radius: 8px;
-            position: relative;
-            transition: background 0.2s;
-        }
-
-        .toggle-switch.active {
-            background: #00ffaa;
-        }
-
-        .toggle-switch::after {
-            content: '';
-            position: absolute;
+        .brand-mark {
             width: 12px;
             height: 12px;
-            background: white;
             border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #7bffca);
+            box-shadow: 0 0 12px rgba(29, 233, 182, 0.9);
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .status-pill {
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 6px 10px;
+            border-radius: 99px;
+            border: 1px solid rgba(29, 233, 182, 0.7);
+            color: var(--accent-2);
+            background: rgba(29, 233, 182, 0.08);
+        }
+
+        .btn {
+            border: 1px solid var(--line-soft);
+            background: rgba(29, 233, 182, 0.08);
+            color: var(--text);
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: 0.15s ease;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            border-color: var(--accent);
+            box-shadow: 0 0 18px rgba(29, 233, 182, 0.18);
+        }
+
+        .app {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 270px 1fr 340px;
+            min-height: 0;
+        }
+
+        .panel {
+            background: var(--panel);
+            border-right: 1px solid var(--line-soft);
+            backdrop-filter: blur(4px);
+        }
+
+        .panel.right {
+            border-right: none;
+            border-left: 1px solid var(--line-soft);
+        }
+
+        .sidebar,
+        .rightbar {
+            padding: 16px;
+            overflow-y: auto;
+        }
+
+        .section {
+            margin-bottom: 18px;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: var(--muted);
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 1.8px;
+            font-weight: 700;
+        }
+
+        .section-title .count {
+            color: var(--accent);
+        }
+
+        .module {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .module:hover {
+            border-color: var(--line-soft);
+            background: rgba(29,233,182,0.04);
+        }
+
+        .module.active {
+            background: rgba(29,233,182,0.09);
+            border-color: rgba(29,233,182,0.5);
+            box-shadow: inset 0 0 0 1px rgba(29,233,182,0.15);
+        }
+
+        .module-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .switch {
+            position: relative;
+            width: 34px;
+            height: 18px;
+            border-radius: 99px;
+            background: rgba(255,255,255,0.12);
+            transition: 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .switch::after {
+            content: "";
+            position: absolute;
             top: 2px;
             left: 2px;
-            transition: left 0.2s;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: white;
+            transition: 0.2s ease;
         }
 
-        .toggle-switch.active::after {
-            left: 16px;
+        .module.active .switch {
+            background: rgba(29,233,182,0.75);
         }
 
-        .main-content {
-            flex: 1;
+        .module.active .switch::after {
+            left: 18px;
+        }
+
+        .main-area {
             display: flex;
             flex-direction: column;
-            background: linear-gradient(to bottom, rgba(26, 26, 46, 0.5), rgba(22, 33, 62, 0.5));
-            overflow: hidden;
+            min-width: 0;
+            background: linear-gradient(180deg, rgba(10, 15, 26, 0.6), rgba(14, 20, 31, 0.7));
         }
 
-        .game-viewport {
+        .viewport {
             flex: 1;
             position: relative;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="%23222" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="%231a1a2e"/><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            border-top: 1px solid rgba(0, 255, 170, 0.2);
+            overflow: hidden;
+            border-bottom: 1px solid var(--line-soft);
+            background:
+                linear-gradient(180deg, rgba(19, 29, 43, 0.42), rgba(8, 12, 18, 0.65)),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                #0f1a28;
+            background-size: auto, 24px 24px, 24px 24px, auto;
         }
 
-        .hud-overlay {
+        .viewport::before {
+            content: "";
             position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 60%, rgba(29,233,182,0.06), transparent 38%);
+        }
+
+        .crosshair {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 16px;
+            height: 16px;
+            transform: translate(-50%, -50%);
+            opacity: 0.9;
+        }
+
+        .crosshair::before,
+        .crosshair::after {
+            content: "";
+            position: absolute;
+            background: rgba(29,233,182,0.9);
+            box-shadow: 0 0 10px rgba(29,233,182,0.7);
+        }
+
+        .crosshair::before {
+            left: 7px;
+            top: 0;
+            width: 2px;
+            height: 16px;
+        }
+
+        .crosshair::after {
+            top: 7px;
+            left: 0;
+            width: 16px;
+            height: 2px;
+        }
+
+        .hud {
+            position: absolute;
+            left: 18px;
             top: 20px;
-            left: 20px;
-            color: #00ffaa;
-            font-weight: bold;
-            text-shadow: 0 0 10px #00ffaa;
+            z-index: 2;
+            color: var(--accent-2);
+            font-weight: 700;
+            text-shadow: 0 0 12px rgba(29,233,182,0.8);
         }
 
         .hud-title {
-            font-size: 24px;
-            margin-bottom: 8px;
+            font-size: 28px;
+            letter-spacing: 4px;
         }
 
-        .hud-version {
-            font-size: 12px;
-            color: #9fe7ff;
-            text-shadow: 0 0 5px #9fe7ff;
+        .hud-info {
+            margin-top: 6px;
+            font-size: 11px;
+            color: #bfe9ff;
+            letter-spacing: 0.1em;
+            opacity: 0.9;
         }
 
-        .hud-status {
+        .stats-box {
+            position: absolute;
+            right: 18px;
+            top: 18px;
+            z-index: 2;
+            background: rgba(8, 12, 18, 0.75);
+            border: 1px solid var(--line-soft);
+            border-radius: 10px;
+            padding: 10px 12px;
+            color: var(--accent-2);
+            font-family: "Consolas", monospace;
             font-size: 12px;
-            color: #7cff93;
-            text-shadow: 0 0 5px #7cff93;
-            margin-top: 4px;
+            line-height: 1.7;
         }
 
         .coords {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
-            font-size: 12px;
-            color: #9fe7ff;
-            font-family: 'Courier New', monospace;
-        }
-
-        .fps-counter {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 14px;
-            color: #00ffaa;
-            font-family: 'Courier New', monospace;
-            background: rgba(0, 0, 0, 0.5);
+            left: 18px;
+            bottom: 18px;
+            z-index: 2;
+            background: rgba(8,12,18,0.75);
+            border: 1px solid var(--line-soft);
+            border-radius: 8px;
             padding: 8px 12px;
-            border-radius: 4px;
-            border: 1px solid #00ffaa;
+            font-family: "Consolas", monospace;
+            font-size: 12px;
+            color: #bfe9ff;
         }
 
-        .bottom-bar {
-            background: rgba(0, 0, 0, 0.5);
-            border-top: 1px solid #00ffaa;
-            padding: 12px 20px;
+        .bottom-panel {
+            height: 66px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-size: 12px;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 0 18px;
+            background: rgba(8, 12, 18, 0.9);
+            border-top: 1px solid var(--line-soft);
         }
 
         .keybinds {
-            color: #9fe7ff;
+            display: flex;
+            gap: 18px;
+            flex-wrap: wrap;
+            font-size: 12px;
+            color: var(--muted);
         }
 
-        .keybind-item {
+        .key {
             display: inline-block;
-            margin-right: 20px;
+            min-width: 20px;
+            padding: 4px 7px;
+            border-radius: 6px;
+            border: 1px solid var(--line-soft);
+            background: rgba(29,233,182,0.08);
+            color: var(--accent-2);
+            font-family: "Consolas", monospace;
+            font-weight: 700;
+            text-align: center;
         }
 
-        .keybind-key {
-            background: rgba(0, 255, 170, 0.2);
-            padding: 2px 6px;
-            border-radius: 3px;
-            color: #00ffaa;
-            font-weight: bold;
-        }
-
-        ::-webkit-scrollbar {
+        .custom-scroll::-webkit-scrollbar {
             width: 8px;
         }
 
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.2);
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(29,233,182,0.28);
+            border-radius: 10px;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: rgba(0, 255, 170, 0.4);
-            border-radius: 4px;
+        .rightbar .card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--line-soft);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 16px;
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 255, 170, 0.6);
+        .mini-stat {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
         }
 
-        .settings-panel {
-            display: none;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            border: 2px solid #00ffaa;
-            padding: 20px;
-            border-radius: 8px;
-            min-width: 300px;
-            max-height: 80vh;
-            overflow-y: auto;
-            z-index: 1000;
+        .mini-stat:last-child {
+            border-bottom: none;
         }
 
-        .settings-panel.active {
-            display: block;
+        .mini-stat .label {
+            color: var(--muted);
         }
 
-        .settings-title {
-            color: #00ffaa;
-            font-size: 18px;
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px #00ffaa;
+        .mini-stat .value {
+            color: var(--accent-2);
+            font-weight: 700;
         }
 
-        .setting-item {
-            margin-bottom: 15px;
-        }
-
-        .setting-label {
-            color: #9fe7ff;
-            font-size: 12px;
-            margin-bottom: 5px;
-            display: block;
-        }
-
-        .setting-input {
+        .slider {
             width: 100%;
-            background: rgba(0, 255, 170, 0.1);
-            border: 1px solid #00ffaa;
-            color: #00ffaa;
-            padding: 8px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
+            accent-color: var(--accent);
         }
 
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #00ffaa;
-            color: #000;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
+        .option-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .input {
+            width: 100%;
+            padding: 8px 10px;
+            border-radius: 7px;
+            border: 1px solid var(--line-soft);
+            background: rgba(255,255,255,0.02);
+            color: var(--text);
+            outline: none;
+        }
+
+        .input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(29,233,182,0.12);
+        }
+
+        .button-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        @media (max-width: 1100px) {
+            .app {
+                grid-template-columns: 220px 1fr 300px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .app {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar,
+            .rightbar {
+                display: none;
+            }
+
+            .viewport {
+                min-height: 60vh;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo">⬡ HEXED 1.20.5</div>
-        <div class="status">
-            <div class="status-indicator"></div>
-            <div class="status-text">ONLINE</div>
+    <div class="topbar">
+        <div class="brand">
+            <span class="brand-mark"></span>
+            <span>Hexed</span>
+        </div>
+
+        <div class="top-actions">
+            <div class="status-pill">MC 1.20.5</div>
+            <button class="btn">Load</button>
+            <button class="btn">Save</button>
         </div>
     </div>
 
-    <div class="container">
-        <div class="sidebar">
-            <div class="module-category">
-                <div class="category-title">Combat</div>
-                <div class="module-item" onclick="toggleModule(this, 'aura')">
-                    Aura
-                    <div class="toggle-switch"></div>
-                </div>
-                <div class="module-item" onclick="toggleModule(this, 'velocity')">
-                    Velocity
-                    <div class="toggle-switch"></div>
-                </div>
-                <div class="module-item active" onclick="toggleModule(this, 'reach')">
-                    Reach
-                    <div class="toggle-switch active"></div>
-                </div>
-                <div class="module-item" onclick="toggleModule(this, 'criticals')">
-                    Criticals
-                    <div class="toggle-switch"></div>
-                </div>
+    <div class="app">
+        <aside class="panel sidebar custom-scroll">
+            <div class="section">
+                <div class="section-title"><span>Combat</span><span class="count">4</span></div>
+                <div class="module active"><span class="module-name">Aura</span><span class="switch"></span></div>
+                <div class="module"><span class="module-name">Velocity</span><span class="switch"></span></div>
+                <div class="module active"><span class="module-name">Reach</span><span class="switch"></span></div>
+                <div class="module"><span class="module-name">Criticals</span><span class="switch"></span></div>
             </div>
 
-            <div class="module-category">
-                <div class="category-title">Movement</div>
-                <div class="module-item" onclick="toggleModule(this, 'speed')">
-                    Speed
-                    <div class="toggle-switch"></div>
-                </div>
-                <div class="module-item" onclick="toggleModule(this, 'flight')">
-                    Flight
-                    <div class="toggle-switch"></div>
-                </div>
-                <div class="module-item" onclick="toggleModule(this, 'noclip')">
-                    NoClip
-                    <div class="toggle-switch"></div>
-                </div>
-                <div class="module-item active" onclick="toggleModule(this, 'climb')">
-                    Climb
-                    <div class="toggle-switch active"></div>
-                </div>
+            <div class="section">
+                <div class="section-title"><span>Movement</span><span class="count">4</span></div>
+                <div class="module"><span class="module-name">Speed</span><span class="switch"></span></div>
+                <div class="module active"><span class="module-name">Flight</span><span class="switch"></span></div>
+                <div class="module"><span class="module-name">NoClip</span><span class="switch"></span></div>
+                <div class="module active"><span class="module-name">Sprint</span><span class="switch"></span></div>
             </div>
 
-            <div class="module-category">
-                <div class="category-title">Render</div>
-                <div class="module-item active" onclick="toggleModule(this, 'esp')">
-                    ESP
-                    <div class="toggle-switch active"></div>
-                </div>
-                <div class="module-item" onclick="toggleModule(this, 'fullbright')">
-                    Fullbright
-                    <div class="toggle-switch"></div>
-                </div>
-                <div class="module-item" onclick="toggleModule(this, 'xray')">
-                    X-Ray
-                    <div class="toggle-switch"></div>
-                </div>
-                <div class="module-item" onclick="toggleModule(this, 'nametags')">
-                    NameTags
-                    <div class="toggle-switch"></div>
-                </div>
+            <div class="section">
+                <div class="section-title"><span>Render</span><span class="count">5</span></div>
+                <div class="module active"><span class="module-name">ESP</span><span class="switch"></span></div>
+                <div class="module active"><span class="module-name">Fullbright</span><span class="switch"></span></div>
+                <div class="module"><span class="module-name">X-Ray</span><span class="switch"></span></div>
+                <div class="module"><span class="module-name">Nametags</span><span class="switch"></span></div>
+                <div class="module"><span class="module-name">Tracers</span><span class="switch"></span></div>
             </div>
 
-            <div class="module-category">
-                <div class="category-title">Utility</div>
-                <div class="module-item" onclick="toggleModule(this, 'autobuild')">
-                    AutoBuild
-                    <div class="toggle-switch"></div>
-                </div>
-                <div class="module-item" onclick="toggleModule(this, 'chat')">
-                    Chat
-                    <div class="toggle-switch"></div>
-                </div>
-                <div class="module-item" onclick="toggleModule(this, 'autoeat')">
-                    AutoEat
-                    <div class="toggle-switch"></div>
-                </div>
+            <div class="section">
+                <div class="section-title"><span>Utility</span><span class="count">4</span></div>
+                <div class="module"><span class="module-name">AutoTool</span><span class="switch"></span></div>
+                <div class="module active"><span class="module-name">AutoEat</span><span class="switch"></span></div>
+                <div class="module"><span class="module-name">Chest ESP</span><span class="switch"></span></div>
+                <div class="module"><span class="module-name">Radar</span><span class="switch"></span></div>
             </div>
-        </div>
+        </aside>
 
-        <div class="main-content">
-            <div class="game-viewport">
-                <div class="hud-overlay">
+        <main class="main-area">
+            <div class="viewport">
+                <div class="hud">
                     <div class="hud-title">HEXED</div>
-                    <div class="hud-version">v0.1.0 · MC 1.20.5</div>
-                    <div class="hud-status">Status: Online</div>
+                    <div class="hud-info">v0.2.0 · minecraft 1.20.5</div>
                 </div>
 
-                <div class="fps-counter">
-                    <span id="fps">60</span> FPS
+                <div class="stats-box">
+                    <div>Ping: 12ms</div>
+                    <div>FPS: <span id="fps">60</span></div>
+                    <div>TPS: 20</div>
+                    <div>World: Skyblock</div>
                 </div>
+
+                <div class="crosshair"></div>
 
                 <div class="coords">
-                    X: <span id="coord-x">0.00</span> Y: <span id="coord-y">64.00</span> Z: <span id="coord-z">0.00</span>
-                </div>
-
-                <div class="settings-panel" id="settingsPanel">
-                    <button class="close-btn" onclick="closeSettings()">✕</button>
-                    <div class="settings-title">Settings</div>
-                    
-                    <div class="setting-item">
-                        <label class="setting-label">Player Name</label>
-                        <input type="text" class="setting-input" value="Player" id="playerName">
-                    </div>
-
-                    <div class="setting-item">
-                        <label class="setting-label">Reach Distance</label>
-                        <input type="range" class="setting-input" min="3" max="10" value="5" id="reachDistance">
-                    </div>
-
-                    <div class="setting-item">
-                        <label class="setting-label">Speed Multiplier</label>
-                        <input type="range" class="setting-input" min="1" max="5" value="2" id="speedMult">
-                    </div>
-
-                    <div class="setting-item">
-                        <label class="setting-label">HUD Color</label>
-                        <input type="color" class="setting-input" value="#00ffaa" id="hudColor">
-                    </div>
+                    X: <span id="xcoord">-124.67</span> · Y: <span id="ycoord">64.00</span> · Z: <span id="zcoord">39.12</span>
                 </div>
             </div>
 
-            <div class="bottom-bar">
+            <div class="bottom-panel">
                 <div class="keybinds">
-                    <span class="keybind-item"><span class="keybind-key">H</span> Toggle HUD</span>
-                    <span class="keybind-item"><span class="keybind-key">ESC</span> Menu</span>
-                    <span class="keybind-item"><span class="keybind-key">TAB</span> Module List</span>
+                    <span><span class="key">H</span> HUD</span>
+                    <span><span class="key">G</span> GUI</span>
+                    <span><span class="key">R</span> Reset</span>
+                    <span><span class="key">TAB</span> Modules</span>
                 </div>
-                <div style="cursor: pointer; color: #00ffaa;" onclick="openSettings()">⚙ Settings</div>
+                <button class="btn" id="openConfigBtn">Config</button>
             </div>
-        </div>
+        </main>
+
+        <aside class="panel right custom-scroll">
+            <div class="card">
+                <div class="section-title"><span>Player</span><span class="count">Live</span></div>
+                <div class="mini-stat"><span class="label">Armor</span><span class="value">20 / 20</span></div>
+                <div class="mini-stat"><span class="label">Health</span><span class="value">19.5</span></div>
+                <div class="mini-stat"><span class="label">Food</span><span class="value">20</span></div>
+                <div class="mini-stat"><span class="label">Biome</span><span class="value">Plains</span></div>
+            </div>
+
+            <div class="card">
+                <div class="section-title"><span>Settings</span><span class="count">Main</span></div>
+                <div class="option-row"><span>Reach</span><span>5.20</span></div>
+                <input class="slider" type="range" min="3" max="8" value="5" step="0.1" />
+
+                <div class="option-row"><span>Speed</span><span>1.30</span></div>
+                <input class="slider" type="range" min="1" max="5" value="1.3" step="0.1" />
+
+                <div class="option-row"><span>FOV</span><span>110</span></div>
+                <input class="slider" type="range" min="70" max="140" value="110" />
+            </div>
+
+            <div class="card">
+                <div class="section-title"><span>Config</span><span class="count">Quick</span></div>
+                <div class="config-grid">
+                    <input class="input" type="text" value="Hexed" placeholder="Profile name" />
+                    <input class="input" type="text" value="Main" placeholder="Preset" />
+                </div>
+                <div class="button-row">
+                    <button class="btn">Apply</button>
+                    <button class="btn">Export</button>
+                </div>
+            </div>
+        </aside>
     </div>
 
     <script>
-        let fpsCounter = 60;
-        let frameCount = 0;
-        let lastTime = performance.now();
+        const fpsEl = document.getElementById('fps');
+        let fps = 60;
+        let last = performance.now();
+        let frames = 0;
 
-        setInterval(() => {
-            const now = performance.now();
-            const delta = now - lastTime;
-            frameCount++;
-
-            if (delta >= 1000) {
-                fpsCounter = frameCount;
-                document.getElementById('fps').textContent = fpsCounter;
-                frameCount = 0;
-                lastTime = now;
+        function loop(now) {
+            frames++;
+            if (now - last >= 1000) {
+                fps = frames;
+                fpsEl.textContent = fps;
+                frames = 0;
+                last = now;
             }
-        }, 16);
-
-        let playerX = 0, playerY = 64, playerZ = 0;
-
-        function updateCoordinates() {
-            playerX = (Math.sin(Date.now() / 5000) * 100).toFixed(2);
-            playerZ = (Math.cos(Date.now() / 5000) * 100).toFixed(2);
-            
-            document.getElementById('coord-x').textContent = playerX;
-            document.getElementById('coord-y').textContent = playerY.toFixed(2);
-            document.getElementById('coord-z').textContent = playerZ;
-
-            requestAnimationFrame(updateCoordinates);
+            requestAnimationFrame(loop);
         }
 
-        updateCoordinates();
+        requestAnimationFrame(loop);
 
-        function toggleModule(element, moduleName) {
-            element.classList.toggle('active');
-            const toggle = element.querySelector('.toggle-switch');
-            toggle.classList.toggle('active');
-            
-            const status = toggle.classList.contains('active') ? 'enabled' : 'disabled';
-            console.log(`${moduleName} ${status}`);
+        const xcoord = document.getElementById('xcoord');
+        const ycoord = document.getElementById('ycoord');
+        const zcoord = document.getElementById('zcoord');
+
+        function updateCoords() {
+            const t = Date.now() / 700;
+            xcoord.textContent = (-124.67 + Math.sin(t) * 7.5).toFixed(2);
+            ycoord.textContent = (64 + Math.sin(t * 1.7) * 2).toFixed(2);
+            zcoord.textContent = (39.12 + Math.cos(t) * 6.2).toFixed(2);
+            requestAnimationFrame(updateCoords);
         }
 
-        function openSettings() {
-            document.getElementById('settingsPanel').classList.add('active');
-        }
+        requestAnimationFrame(updateCoords);
 
-        function closeSettings() {
-            document.getElementById('settingsPanel').classList.remove('active');
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeSettings();
-            }
-            if (e.key === 'h' || e.key === 'H') {
-                console.log('HUD toggled');
-            }
+        document.querySelectorAll('.module').forEach((item) => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('active');
+            });
         });
 
-        document.getElementById('hudColor').addEventListener('change', (e) => {
-            const color = e.target.value;
-            const hex = parseInt(color.substring(1), 16);
-            const rgb = `rgb(${(hex >> 16) & 255}, ${(hex >> 8) & 255}, ${hex & 255})`;
-            document.documentElement.style.setProperty('--hud-color', rgb);
+        document.getElementById('openConfigBtn').addEventListener('click', () => {
+            alert('Config panel opened.');
         });
     </script>
 </body>
