@@ -1,615 +1,557 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hexed Client</title>
-    <style>
-        :root {
-            --bg: #0a0f1a;
-            --bg2: #111b2d;
-            --panel: rgba(17, 27, 45, 0.88);
-            --panel-2: rgba(20, 35, 56, 0.9);
-            --line: #1de9b6;
-            --line-soft: rgba(29, 233, 182, 0.35);
-            --text: #e7f9ff;
-            --muted: #9fb8c8;
-            --accent: #1de9b6;
-            --accent-2: #7ef9d6;
-            --warning: #ffcc66;
-            --danger: #ff6b6b;
-            --shadow: rgba(5, 10, 19, 0.75);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hexed Client</title>
+  <style>
+    :root {
+      --bg: #0d1420;
+      --bg-2: #111d2b;
+      --panel: #0f1b2b;
+      --panel-alt: #14273d;
+      --line: #39d3a8;
+      --line-soft: rgba(57, 211, 168, 0.28);
+      --text: #edf7ff;
+      --muted: #a9c9dc;
+      --accent: #39d3a8;
+      --accent-2: #7af7d0;
+      --shadow: rgba(0, 0, 0, 0.35);
+    }
 
-        * { box-sizing: border-box; }
+    * { box-sizing: border-box; }
 
-        html, body {
-            margin: 0;
-            width: 100%;
-            height: 100%;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: radial-gradient(circle at top, #17263d, var(--bg) 42%);
-            color: var(--text);
-            overflow: hidden;
-        }
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(180deg, #0a1018 0%, #101b2a 100%);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      overflow: hidden;
+    }
 
-        body {
-            display: flex;
-            flex-direction: column;
-        }
+    body {
+      display: flex;
+      flex-direction: column;
+    }
 
-        .topbar {
-            height: 62px;
-            background: rgba(7, 11, 19, 0.96);
-            border-bottom: 1px solid var(--line-soft);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 18px;
-            box-shadow: 0 8px 24px var(--shadow);
-        }
+    .topbar {
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      background: rgba(9, 14, 21, 0.96);
+      border-bottom: 1px solid var(--line-soft);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            color: var(--accent-2);
-            text-transform: uppercase;
-        }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent-2);
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
 
-        .brand-mark {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), #7bffca);
-            box-shadow: 0 0 12px rgba(29, 233, 182, 0.9);
-        }
+    .brand-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 12px rgba(57, 211, 168, 0.9);
+    }
 
-        .top-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+    .status-pill {
+      font-size: 11px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--accent-2);
+      background: rgba(57, 211, 168, 0.08);
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      padding: 6px 10px;
+    }
 
-        .status-pill {
-            font-size: 11px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            padding: 6px 10px;
-            border-radius: 99px;
-            border: 1px solid rgba(29, 233, 182, 0.7);
-            color: var(--accent-2);
-            background: rgba(29, 233, 182, 0.08);
-        }
+    .app {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 250px 1fr 300px;
+      min-height: 0;
+    }
 
-        .btn {
-            border: 1px solid var(--line-soft);
-            background: rgba(29, 233, 182, 0.08);
-            color: var(--text);
-            border-radius: 8px;
-            padding: 8px 12px;
-            cursor: pointer;
-            transition: 0.15s ease;
-            font-weight: 600;
-        }
+    .panel {
+      background: rgba(14, 22, 31, 0.92);
+      border-right: 1px solid var(--line-soft);
+    }
 
-        .btn:hover {
-            transform: translateY(-1px);
-            border-color: var(--accent);
-            box-shadow: 0 0 18px rgba(29, 233, 182, 0.18);
-        }
+    .panel.right {
+      border-right: none;
+      border-left: 1px solid var(--line-soft);
+    }
 
-        .app {
-            flex: 1;
-            display: grid;
-            grid-template-columns: 270px 1fr 340px;
-            min-height: 0;
-        }
+    .sidebar, .rightbar {
+      overflow-y: auto;
+      padding: 16px;
+    }
 
-        .panel {
-            background: var(--panel);
-            border-right: 1px solid var(--line-soft);
-            backdrop-filter: blur(4px);
-        }
+    .group {
+      margin-bottom: 20px;
+    }
 
-        .panel.right {
-            border-right: none;
-            border-left: 1px solid var(--line-soft);
-        }
+    .group-title {
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
 
-        .sidebar,
-        .rightbar {
-            padding: 16px;
-            overflow-y: auto;
-        }
+    .feature {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid transparent;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: 0.15s ease;
+      color: var(--text);
+    }
 
-        .section {
-            margin-bottom: 18px;
-        }
+    .feature:hover {
+      border-color: var(--line-soft);
+      background: rgba(57, 211, 168, 0.04);
+    }
 
-        .section-title {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            color: var(--muted);
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 1.8px;
-            font-weight: 700;
-        }
+    .feature.active {
+      background: rgba(57, 211, 168, 0.08);
+      border-color: var(--line-soft);
+    }
 
-        .section-title .count {
-            color: var(--accent);
-        }
+    .switch {
+      position: relative;
+      width: 32px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
 
-        .module {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            padding: 10px 12px;
-            margin-bottom: 8px;
-            border-radius: 8px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid transparent;
-            cursor: pointer;
-            transition: 0.2s ease;
-        }
+    .switch::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ffffff;
+      transition: 0.15s ease;
+    }
 
-        .module:hover {
-            border-color: var(--line-soft);
-            background: rgba(29,233,182,0.04);
-        }
+    .feature.active .switch {
+      background: var(--accent);
+    }
 
-        .module.active {
-            background: rgba(29,233,182,0.09);
-            border-color: rgba(29,233,182,0.5);
-            box-shadow: inset 0 0 0 1px rgba(29,233,182,0.15);
-        }
+    .feature.active .switch::after {
+      left: 17px;
+    }
 
-        .module-name {
-            font-weight: 600;
-            font-size: 14px;
-        }
+    .main-area {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: linear-gradient(180deg, rgba(15,27,43,0.75), rgba(8,14,20,0.84));
+    }
 
-        .switch {
-            position: relative;
-            width: 34px;
-            height: 18px;
-            border-radius: 99px;
-            background: rgba(255,255,255,0.12);
-            transition: 0.2s ease;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
+    .viewport {
+      position: relative;
+      flex: 1;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(12, 18, 27, 0.25), rgba(12,18,27,0.68)),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        #0e1824;
+      background-size: auto, 24px 24px, 24px 24px, auto;
+      border-bottom: 1px solid var(--line-soft);
+    }
 
-        .switch::after {
-            content: "";
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: white;
-            transition: 0.2s ease;
-        }
+    .viewport::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(57, 211, 168, 0.07), transparent 36%);
+    }
 
-        .module.active .switch {
-            background: rgba(29,233,182,0.75);
-        }
+    .hud {
+      position: absolute;
+      left: 18px;
+      top: 16px;
+      z-index: 2;
+      color: var(--accent-2);
+      text-shadow: 0 0 12px rgba(57, 211, 168, 0.75);
+    }
 
-        .module.active .switch::after {
-            left: 18px;
-        }
+    .hud-title {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: 3px;
+    }
 
-        .main-area {
-            display: flex;
-            flex-direction: column;
-            min-width: 0;
-            background: linear-gradient(180deg, rgba(10, 15, 26, 0.6), rgba(14, 20, 31, 0.7));
-        }
+    .hud-sub {
+      margin-top: 6px;
+      color: #d2ecff;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.95;
+    }
 
-        .viewport {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-            border-bottom: 1px solid var(--line-soft);
-            background:
-                linear-gradient(180deg, rgba(19, 29, 43, 0.42), rgba(8, 12, 18, 0.65)),
-                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
-                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-                #0f1a28;
-            background-size: auto, 24px 24px, 24px 24px, auto;
-        }
+    .stats {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      z-index: 2;
+      padding: 10px 12px;
+      background: rgba(9, 14, 21, 0.8);
+      border: 1px solid var(--line-soft);
+      border-radius: 8px;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+      color: var(--accent-2);
+      line-height: 1.7;
+    }
 
-        .viewport::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 50% 60%, rgba(29,233,182,0.06), transparent 38%);
-        }
+    .crosshair {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(57, 211, 168, 0.9);
+      border-radius: 50%;
+      z-index: 2;
+    }
 
-        .crosshair {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 16px;
-            height: 16px;
-            transform: translate(-50%, -50%);
-            opacity: 0.9;
-        }
+    .crosshair::before,
+    .crosshair::after {
+      content: "";
+      position: absolute;
+      background: rgba(57, 211, 168, 0.9);
+    }
 
-        .crosshair::before,
-        .crosshair::after {
-            content: "";
-            position: absolute;
-            background: rgba(29,233,182,0.9);
-            box-shadow: 0 0 10px rgba(29,233,182,0.7);
-        }
+    .crosshair::before {
+      left: 7px;
+      top: -8px;
+      width: 2px;
+      height: 30px;
+    }
 
-        .crosshair::before {
-            left: 7px;
-            top: 0;
-            width: 2px;
-            height: 16px;
-        }
+    .crosshair::after {
+      top: 7px;
+      left: -8px;
+      width: 30px;
+      height: 2px;
+    }
 
-        .crosshair::after {
-            top: 7px;
-            left: 0;
-            width: 16px;
-            height: 2px;
-        }
+    .coords {
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      z-index: 2;
+      padding: 8px 12px;
+      background: rgba(9,14,21,0.8);
+      border: 1px solid var(--line-soft);
+      border-radius: 8px;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+      color: #dafeff;
+    }
 
-        .hud {
-            position: absolute;
-            left: 18px;
-            top: 20px;
-            z-index: 2;
-            color: var(--accent-2);
-            font-weight: 700;
-            text-shadow: 0 0 12px rgba(29,233,182,0.8);
-        }
+    .bottom-bar {
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 18px;
+      background: rgba(9, 14, 21, 0.95);
+      border-top: 1px solid var(--line-soft);
+    }
 
-        .hud-title {
-            font-size: 28px;
-            letter-spacing: 4px;
-        }
+    .keys {
+      display: flex;
+      gap: 18px;
+      color: var(--muted);
+      font-size: 12px;
+      flex-wrap: wrap;
+    }
 
-        .hud-info {
-            margin-top: 6px;
-            font-size: 11px;
-            color: #bfe9ff;
-            letter-spacing: 0.1em;
-            opacity: 0.9;
-        }
+    .key {
+      display: inline-block;
+      min-width: 22px;
+      text-align: center;
+      padding: 4px 7px;
+      border: 1px solid var(--line-soft);
+      background: rgba(57, 211, 168, 0.08);
+      color: var(--accent-2);
+      border-radius: 6px;
+      font-family: Consolas, monospace;
+      font-weight: 700;
+    }
 
-        .stats-box {
-            position: absolute;
-            right: 18px;
-            top: 18px;
-            z-index: 2;
-            background: rgba(8, 12, 18, 0.75);
-            border: 1px solid var(--line-soft);
-            border-radius: 10px;
-            padding: 10px 12px;
-            color: var(--accent-2);
-            font-family: "Consolas", monospace;
-            font-size: 12px;
-            line-height: 1.7;
-        }
+    .action {
+      background: rgba(57, 211, 168, 0.08);
+      border: 1px solid var(--line-soft);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
 
-        .coords {
-            position: absolute;
-            left: 18px;
-            bottom: 18px;
-            z-index: 2;
-            background: rgba(8,12,18,0.75);
-            border: 1px solid var(--line-soft);
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-family: "Consolas", monospace;
-            font-size: 12px;
-            color: #bfe9ff;
-        }
+    .rightbar .card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line-soft);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
 
-        .bottom-panel {
-            height: 66px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            padding: 0 18px;
-            background: rgba(8, 12, 18, 0.9);
-            border-top: 1px solid var(--line-soft);
-        }
+    .card-title {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
 
-        .keybinds {
-            display: flex;
-            gap: 18px;
-            flex-wrap: wrap;
-            font-size: 12px;
-            color: var(--muted);
-        }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 13px;
+    }
 
-        .key {
-            display: inline-block;
-            min-width: 20px;
-            padding: 4px 7px;
-            border-radius: 6px;
-            border: 1px solid var(--line-soft);
-            background: rgba(29,233,182,0.08);
-            color: var(--accent-2);
-            font-family: "Consolas", monospace;
-            font-weight: 700;
-            text-align: center;
-        }
+    .row:last-child { border-bottom: none; }
 
-        .custom-scroll::-webkit-scrollbar {
-            width: 8px;
-        }
+    .row .label { color: var(--muted); }
+    .row .value { color: var(--accent-2); font-weight: 700; }
 
-        .custom-scroll::-webkit-scrollbar-thumb {
-            background: rgba(29,233,182,0.28);
-            border-radius: 10px;
-        }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+      margin-top: 8px;
+    }
 
-        .rightbar .card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--line-soft);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 16px;
-        }
+    .button {
+      width: 100%;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #07130f;
+      font-weight: 800;
+      padding: 10px 12px;
+      cursor: pointer;
+    }
 
-        .mini-stat {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 13px;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
-        }
+    .mode-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
 
-        .mini-stat:last-child {
-            border-bottom: none;
-        }
+    .mode-button {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--line-soft);
+      border-radius: 8px;
+      color: var(--text);
+      padding: 10px 8px;
+      cursor: pointer;
+      font-weight: 700;
+    }
 
-        .mini-stat .label {
-            color: var(--muted);
-        }
+    .mode-button.active {
+      background: rgba(57, 211, 168, 0.12);
+      border-color: var(--line-soft);
+      color: var(--accent-2);
+    }
 
-        .mini-stat .value {
-            color: var(--accent-2);
-            font-weight: 700;
-        }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(57, 211, 168, 0.26);
+      border-radius: 10px;
+    }
 
-        .slider {
-            width: 100%;
-            accent-color: var(--accent);
-        }
-
-        .option-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            margin-top: 10px;
-            font-size: 13px;
-            color: var(--muted);
-        }
-
-        .config-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .input {
-            width: 100%;
-            padding: 8px 10px;
-            border-radius: 7px;
-            border: 1px solid var(--line-soft);
-            background: rgba(255,255,255,0.02);
-            color: var(--text);
-            outline: none;
-        }
-
-        .input:focus {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(29,233,182,0.12);
-        }
-
-        .button-row {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        @media (max-width: 1100px) {
-            .app {
-                grid-template-columns: 220px 1fr 300px;
-            }
-        }
-
-        @media (max-width: 900px) {
-            .app {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar,
-            .rightbar {
-                display: none;
-            }
-
-            .viewport {
-                min-height: 60vh;
-            }
-        }
-    </style>
+    @media (max-width: 900px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+      .sidebar, .rightbar {
+        display: none;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="topbar">
-        <div class="brand">
-            <span class="brand-mark"></span>
-            <span>Hexed</span>
+  <div class="topbar">
+    <div class="brand"><span class="brand-dot"></span> Hexed</div>
+    <div class="status-pill">Minecraft 1.20.5</div>
+  </div>
+
+  <div class="app">
+    <aside class="panel sidebar">
+      <div class="group">
+        <div class="group-title">General</div>
+        <div class="feature active"><span>HUD</span><span class="switch"></span></div>
+        <div class="feature"><span>Minimap</span><span class="switch"></span></div>
+        <div class="feature active"><span>Chat</span><span class="switch"></span></div>
+        <div class="feature"><span>Notifications</span><span class="switch"></span></div>
+      </div>
+
+      <div class="group">
+        <div class="group-title">Graphics</div>
+        <div class="feature active"><span>Brightness</span><span class="switch"></span></div>
+        <div class="feature"><span>V-Sync</span><span class="switch"></span></div>
+        <div class="feature"><span>Shaders</span><span class="switch"></span></div>
+        <div class="feature"><span>Particles</span><span class="switch"></span></div>
+      </div>
+
+      <div class="group">
+        <div class="group-title">Controls</div>
+        <div class="feature active"><span>Auto Sprint</span><span class="switch"></span></div>
+        <div class="feature"><span>Toggle Sneak</span><span class="switch"></span></div>
+        <div class="feature"><span>Keybinds</span><span class="switch"></span></div>
+        <div class="feature"><span>Mouse Sensitivity</span><span class="switch"></span></div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <div class="viewport">
+        <div class="hud">
+          <div class="hud-title">HEXED</div>
+          <div class="hud-sub">Client UI • version 0.2.0</div>
         </div>
 
-        <div class="top-actions">
-            <div class="status-pill">MC 1.20.5</div>
-            <button class="btn">Load</button>
-            <button class="btn">Save</button>
+        <div class="stats">
+          <div>FPS: <span id="fps">60</span></div>
+          <div>Ping: 12ms</div>
+          <div>World: Plains</div>
         </div>
-    </div>
 
-    <div class="app">
-        <aside class="panel sidebar custom-scroll">
-            <div class="section">
-                <div class="section-title"><span>Combat</span><span class="count">4</span></div>
-                <div class="module active"><span class="module-name">Aura</span><span class="switch"></span></div>
-                <div class="module"><span class="module-name">Velocity</span><span class="switch"></span></div>
-                <div class="module active"><span class="module-name">Reach</span><span class="switch"></span></div>
-                <div class="module"><span class="module-name">Criticals</span><span class="switch"></span></div>
-            </div>
+        <div class="crosshair"></div>
 
-            <div class="section">
-                <div class="section-title"><span>Movement</span><span class="count">4</span></div>
-                <div class="module"><span class="module-name">Speed</span><span class="switch"></span></div>
-                <div class="module active"><span class="module-name">Flight</span><span class="switch"></span></div>
-                <div class="module"><span class="module-name">NoClip</span><span class="switch"></span></div>
-                <div class="module active"><span class="module-name">Sprint</span><span class="switch"></span></div>
-            </div>
+        <div class="coords">
+          X: <span id="x">0.00</span> · Y: <span id="y">64.00</span> · Z: <span id="z">0.00</span>
+        </div>
+      </div>
 
-            <div class="section">
-                <div class="section-title"><span>Render</span><span class="count">5</span></div>
-                <div class="module active"><span class="module-name">ESP</span><span class="switch"></span></div>
-                <div class="module active"><span class="module-name">Fullbright</span><span class="switch"></span></div>
-                <div class="module"><span class="module-name">X-Ray</span><span class="switch"></span></div>
-                <div class="module"><span class="module-name">Nametags</span><span class="switch"></span></div>
-                <div class="module"><span class="module-name">Tracers</span><span class="switch"></span></div>
-            </div>
+      <div class="bottom-bar">
+        <div class="keys">
+          <span><span class="key">H</span> HUD</span>
+          <span><span class="key">G</span> Gui</span>
+          <span><span class="key">R</span> Reset</span>
+        </div>
+        <button class="action">Open Settings</button>
+      </div>
+    </main>
 
-            <div class="section">
-                <div class="section-title"><span>Utility</span><span class="count">4</span></div>
-                <div class="module"><span class="module-name">AutoTool</span><span class="switch"></span></div>
-                <div class="module active"><span class="module-name">AutoEat</span><span class="switch"></span></div>
-                <div class="module"><span class="module-name">Chest ESP</span><span class="switch"></span></div>
-                <div class="module"><span class="module-name">Radar</span><span class="switch"></span></div>
-            </div>
-        </aside>
+    <aside class="panel right rightbar">
+      <div class="card">
+        <div class="card-title">Launch</div>
+        <div class="mode-buttons">
+          <button class="mode-button active">Single Player</button>
+          <button class="mode-button">Server</button>
+        </div>
+      </div>
 
-        <main class="main-area">
-            <div class="viewport">
-                <div class="hud">
-                    <div class="hud-title">HEXED</div>
-                    <div class="hud-info">v0.2.0 · minecraft 1.20.5</div>
-                </div>
+      <div class="card">
+        <div class="card-title">Player</div>
+        <div class="row"><span class="label">Health</span><span class="value">20 / 20</span></div>
+        <div class="row"><span class="label">Hunger</span><span class="value">10 / 10</span></div>
+        <div class="row"><span class="label">Armor</span><span class="value">20 / 20</span></div>
+        <div class="row"><span class="label">Biome</span><span class="value">Plains</span></div>
+      </div>
 
-                <div class="stats-box">
-                    <div>Ping: 12ms</div>
-                    <div>FPS: <span id="fps">60</span></div>
-                    <div>TPS: 20</div>
-                    <div>World: Skyblock</div>
-                </div>
+      <div class="card">
+        <div class="card-title">Settings</div>
+        <div class="row"><span class="label">Brightness</span><span class="value">High</span></div>
+        <input type="range" min="0" max="100" value="80" />
 
-                <div class="crosshair"></div>
+        <div class="row" style="margin-top: 12px;"><span class="label">Sensitivity</span><span class="value" id="sensVal">1.3</span></div>
+        <input type="range" min="0.5" max="3" value="1.3" step="0.1" id="sensRange" />
 
-                <div class="coords">
-                    X: <span id="xcoord">-124.67</span> · Y: <span id="ycoord">64.00</span> · Z: <span id="zcoord">39.12</span>
-                </div>
-            </div>
+        <button class="button">Save Profile</button>
+      </div>
+    </aside>
+  </div>
 
-            <div class="bottom-panel">
-                <div class="keybinds">
-                    <span><span class="key">H</span> HUD</span>
-                    <span><span class="key">G</span> GUI</span>
-                    <span><span class="key">R</span> Reset</span>
-                    <span><span class="key">TAB</span> Modules</span>
-                </div>
-                <button class="btn" id="openConfigBtn">Config</button>
-            </div>
-        </main>
+  <script>
+    const fpsEl = document.getElementById('fps');
+    const xEl = document.getElementById('x');
+    const yEl = document.getElementById('y');
+    const zEl = document.getElementById('z');
+    const sensRange = document.getElementById('sensRange');
+    const sensVal = document.getElementById('sensVal');
 
-        <aside class="panel right custom-scroll">
-            <div class="card">
-                <div class="section-title"><span>Player</span><span class="count">Live</span></div>
-                <div class="mini-stat"><span class="label">Armor</span><span class="value">20 / 20</span></div>
-                <div class="mini-stat"><span class="label">Health</span><span class="value">19.5</span></div>
-                <div class="mini-stat"><span class="label">Food</span><span class="value">20</span></div>
-                <div class="mini-stat"><span class="label">Biome</span><span class="value">Plains</span></div>
-            </div>
+    let fps = 60;
+    let frames = 0;
+    let last = performance.now();
 
-            <div class="card">
-                <div class="section-title"><span>Settings</span><span class="count">Main</span></div>
-                <div class="option-row"><span>Reach</span><span>5.20</span></div>
-                <input class="slider" type="range" min="3" max="8" value="5" step="0.1" />
+    function updateFps(now) {
+      frames++;
+      if (now - last >= 1000) {
+        fps = frames;
+        fpsEl.textContent = fps;
+        frames = 0;
+        last = now;
+      }
+      requestAnimationFrame(updateFps);
+    }
 
-                <div class="option-row"><span>Speed</span><span>1.30</span></div>
-                <input class="slider" type="range" min="1" max="5" value="1.3" step="0.1" />
+    function updateCoords() {
+      const t = Date.now() / 1000;
+      xEl.textContent = (Math.sin(t) * 18).toFixed(2);
+      yEl.textContent = (64 + Math.sin(t * 1.7) * 2).toFixed(2);
+      zEl.textContent = (Math.cos(t) * 18).toFixed(2);
+      requestAnimationFrame(updateCoords);
+    }
 
-                <div class="option-row"><span>FOV</span><span>110</span></div>
-                <input class="slider" type="range" min="70" max="140" value="110" />
-            </div>
+    sensRange.addEventListener('input', () => {
+      sensVal.textContent = Number(sensRange.value).toFixed(1);
+    });
 
-            <div class="card">
-                <div class="section-title"><span>Config</span><span class="count">Quick</span></div>
-                <div class="config-grid">
-                    <input class="input" type="text" value="Hexed" placeholder="Profile name" />
-                    <input class="input" type="text" value="Main" placeholder="Preset" />
-                </div>
-                <div class="button-row">
-                    <button class="btn">Apply</button>
-                    <button class="btn">Export</button>
-                </div>
-            </div>
-        </aside>
-    </div>
+    document.querySelectorAll('.feature').forEach((feature) => {
+      feature.addEventListener('click', () => {
+        feature.classList.toggle('active');
+      });
+    });
 
-    <script>
-        const fpsEl = document.getElementById('fps');
-        let fps = 60;
-        let last = performance.now();
-        let frames = 0;
+    document.querySelectorAll('.mode-button').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.mode-button').forEach((b) => b.classList.remove('active'));
+        button.classList.add('active');
+      });
+    });
 
-        function loop(now) {
-            frames++;
-            if (now - last >= 1000) {
-                fps = frames;
-                fpsEl.textContent = fps;
-                frames = 0;
-                last = now;
-            }
-            requestAnimationFrame(loop);
-        }
-
-        requestAnimationFrame(loop);
-
-        const xcoord = document.getElementById('xcoord');
-        const ycoord = document.getElementById('ycoord');
-        const zcoord = document.getElementById('zcoord');
-
-        function updateCoords() {
-            const t = Date.now() / 700;
-            xcoord.textContent = (-124.67 + Math.sin(t) * 7.5).toFixed(2);
-            ycoord.textContent = (64 + Math.sin(t * 1.7) * 2).toFixed(2);
-            zcoord.textContent = (39.12 + Math.cos(t) * 6.2).toFixed(2);
-            requestAnimationFrame(updateCoords);
-        }
-
-        requestAnimationFrame(updateCoords);
-
-        document.querySelectorAll('.module').forEach((item) => {
-            item.addEventListener('click', () => {
-                item.classList.toggle('active');
-            });
-        });
-
-        document.getElementById('openConfigBtn').addEventListener('click', () => {
-            alert('Config panel opened.');
-        });
-    </script>
+    requestAnimationFrame(updateFps);
+    requestAnimationFrame(updateCoords);
+  </script>
 </body>
 </html>
