@@ -79,7 +79,7 @@
     .app {
       flex: 1;
       display: grid;
-      grid-template-columns: 250px 1fr 300px;
+      grid-template-columns: 250px 1fr 320px;
       min-height: 0;
     }
 
@@ -393,6 +393,52 @@
       color: var(--accent-2);
     }
 
+    .field-label {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 10px 0 6px;
+    }
+
+    .text-input,
+    .select-input {
+      width: 100%;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line-soft);
+      border-radius: 8px;
+      color: var(--text);
+      padding: 9px 10px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .text-input:focus,
+    .select-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(57, 211, 168, 0.12);
+    }
+
+    .launch-button {
+      width: 100%;
+      margin-top: 12px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--accent), #1bbd94);
+      color: #07130f;
+      padding: 10px 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .launch-status {
+      margin-top: 10px;
+      min-height: 18px;
+      font-size: 12px;
+      color: var(--accent-2);
+    }
+
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-thumb {
       background: rgba(57, 211, 168, 0.26);
@@ -476,9 +522,27 @@
       <div class="card">
         <div class="card-title">Launch</div>
         <div class="mode-buttons">
-          <button class="mode-button active">Single Player</button>
-          <button class="mode-button">Server</button>
+          <button class="mode-button active" data-mode="single">Single Player</button>
+          <button class="mode-button" data-mode="server">Server</button>
         </div>
+
+        <div id="serverFields" style="display: none;">
+          <label class="field-label" for="serverAddress">Server Address</label>
+          <input id="serverAddress" class="text-input" type="text" value="play.example.com:25565" />
+        </div>
+
+        <div id="worldFields" style="display: block;">
+          <label class="field-label" for="worldSelect">World</label>
+          <select id="worldSelect" class="select-input">
+            <option>World 1</option>
+            <option>World 2</option>
+            <option>Skyblock</option>
+            <option>Creative</option>
+          </select>
+        </div>
+
+        <button class="launch-button" id="launchButton">Launch</button>
+        <div class="launch-status" id="launchStatus">Ready</div>
       </div>
 
       <div class="card">
@@ -509,7 +573,13 @@
     const zEl = document.getElementById('z');
     const sensRange = document.getElementById('sensRange');
     const sensVal = document.getElementById('sensVal');
+    const launchStatus = document.getElementById('launchStatus');
+    const launchButton = document.getElementById('launchButton');
+    const serverFields = document.getElementById('serverFields');
+    const worldFields = document.getElementById('worldFields');
+    const modeButtons = document.querySelectorAll('.mode-button');
 
+    let selectedMode = 'single';
     let fps = 60;
     let frames = 0;
     let last = performance.now();
@@ -543,11 +613,30 @@
       });
     });
 
-    document.querySelectorAll('.mode-button').forEach((button) => {
+    modeButtons.forEach((button) => {
       button.addEventListener('click', () => {
-        document.querySelectorAll('.mode-button').forEach((b) => b.classList.remove('active'));
+        modeButtons.forEach((b) => b.classList.remove('active'));
         button.classList.add('active');
+        selectedMode = button.dataset.mode;
+
+        if (selectedMode === 'server') {
+          serverFields.style.display = 'block';
+          worldFields.style.display = 'none';
+        } else {
+          serverFields.style.display = 'none';
+          worldFields.style.display = 'block';
+        }
       });
+    });
+
+    launchButton.addEventListener('click', () => {
+      if (selectedMode === 'server') {
+        const address = document.getElementById('serverAddress').value.trim();
+        launchStatus.textContent = 'Launching server: ' + (address || 'unknown server');
+      } else {
+        const world = document.getElementById('worldSelect').value;
+        launchStatus.textContent = 'Launching single-player world: ' + world;
+      }
     });
 
     requestAnimationFrame(updateFps);
