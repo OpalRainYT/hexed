@@ -7,7 +7,6 @@
   <style>
     :root {
       --bg: #0d1420;
-      --bg-2: #111d2b;
       --panel: #0f1b2b;
       --panel-alt: #14273d;
       --line: #39d3a8;
@@ -31,10 +30,7 @@
       overflow: hidden;
     }
 
-    body {
-      display: flex;
-      flex-direction: column;
-    }
+    body { display: flex; flex-direction: column; }
 
     .topbar {
       height: 62px;
@@ -79,7 +75,7 @@
     .app {
       flex: 1;
       display: grid;
-      grid-template-columns: 250px 1fr 320px;
+      grid-template-columns: 250px 1fr 350px;
       min-height: 0;
     }
 
@@ -98,9 +94,7 @@
       padding: 16px;
     }
 
-    .group {
-      margin-bottom: 20px;
-    }
+    .group { margin-bottom: 20px; }
 
     .group-title {
       color: var(--muted);
@@ -158,13 +152,8 @@
       transition: 0.15s ease;
     }
 
-    .feature.active .switch {
-      background: var(--accent);
-    }
-
-    .feature.active .switch::after {
-      left: 17px;
-    }
+    .feature.active .switch { background: var(--accent); }
+    .feature.active .switch::after { left: 17px; }
 
     .main-area {
       display: flex;
@@ -348,7 +337,6 @@
     }
 
     .row:last-child { border-bottom: none; }
-
     .row .label { color: var(--muted); }
     .row .value { color: var(--accent-2); font-weight: 700; }
 
@@ -403,7 +391,8 @@
     }
 
     .text-input,
-    .select-input {
+    .select-input,
+    .server-list {
       width: 100%;
       background: rgba(255,255,255,0.02);
       border: 1px solid var(--line-soft);
@@ -415,21 +404,56 @@
     }
 
     .text-input:focus,
-    .select-input:focus {
+    .select-input:focus,
+    .server-list:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(57, 211, 168, 0.12);
+    }
+
+    .server-list {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .create-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .mini-input {
+      flex: 1;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--line-soft);
+      border-radius: 8px;
+      color: var(--text);
+      padding: 9px 10px;
+      font-size: 13px;
+    }
+
+    .launch-button,
+    .save-button,
+    .add-button {
+      border: none;
+      border-radius: 8px;
+      font-weight: 800;
+      cursor: pointer;
     }
 
     .launch-button {
       width: 100%;
       margin-top: 12px;
-      border: none;
-      border-radius: 8px;
       background: linear-gradient(180deg, var(--accent), #1bbd94);
       color: #07130f;
       padding: 10px 12px;
-      font-weight: 800;
-      cursor: pointer;
+    }
+
+    .save-button,
+    .add-button {
+      background: rgba(57, 211, 168, 0.12);
+      color: var(--accent-2);
+      border: 1px solid var(--line-soft);
+      padding: 9px 10px;
     }
 
     .launch-status {
@@ -526,12 +550,19 @@
           <button class="mode-button" data-mode="server">Server</button>
         </div>
 
-        <div id="serverFields" style="display: none;">
+        <div id="serverFields" style="display:none;">
           <label class="field-label" for="serverAddress">Server Address</label>
-          <input id="serverAddress" class="text-input" type="text" value="play.example.com:25565" />
+          <input id="serverAddress" class="text-input" type="text" placeholder="play.example.com:25565" />
+
+          <label class="field-label" for="serverList">Saved Servers</label>
+          <textarea id="serverList" class="server-list" spellcheck="false"></textarea>
+          <div class="create-row">
+            <input id="newServer" class="mini-input" type="text" placeholder="Add server" />
+            <button class="add-button" id="addServerBtn">Add</button>
+          </div>
         </div>
 
-        <div id="worldFields" style="display: block;">
+        <div id="worldFields" style="display:block;">
           <label class="field-label" for="worldSelect">World</label>
           <select id="worldSelect" class="select-input">
             <option>World 1</option>
@@ -539,6 +570,12 @@
             <option>Skyblock</option>
             <option>Creative</option>
           </select>
+
+          <label class="field-label" for="newWorld">Create World</label>
+          <div class="create-row">
+            <input id="newWorld" class="mini-input" type="text" placeholder="New World Name" />
+            <button class="add-button" id="createWorldBtn">Create</button>
+          </div>
         </div>
 
         <button class="launch-button" id="launchButton">Launch</button>
@@ -578,11 +615,61 @@
     const serverFields = document.getElementById('serverFields');
     const worldFields = document.getElementById('worldFields');
     const modeButtons = document.querySelectorAll('.mode-button');
+    const serverList = document.getElementById('serverList');
+    const worldSelect = document.getElementById('worldSelect');
+    const addServerBtn = document.getElementById('addServerBtn');
+    const createWorldBtn = document.getElementById('createWorldBtn');
+    const newServerInput = document.getElementById('newServer');
+    const newWorldInput = document.getElementById('newWorld');
+
+    const defaultServers = [
+      'play.hypixel.net',
+      'mc.hypixel.net',
+      'play.example.com:25565'
+    ];
 
     let selectedMode = 'single';
     let fps = 60;
     let frames = 0;
     let last = performance.now();
+
+    function saveServers() {
+      localStorage.setItem('hexedServers', serverList.value);
+    }
+
+    function loadServers() {
+      const saved = localStorage.getItem('hexedServers');
+      if (saved) {
+        serverList.value = saved;
+      } else {
+        serverList.value = defaultServers.join('\n');
+        saveServers();
+      }
+    }
+
+    function addServer() {
+      const value = newServerInput.value.trim();
+      if (!value) return;
+      const lines = serverList.value.split('\n').filter(Boolean);
+      if (!lines.includes(value)) {
+        lines.push(value);
+        serverList.value = lines.join('\n');
+        saveServers();
+      }
+      newServerInput.value = '';
+    }
+
+    function addWorld() {
+      const value = newWorldInput.value.trim();
+      if (!value) return;
+      const exists = Array.from(worldSelect.options).some((option) => option.value === value);
+      if (!exists) {
+        const newOption = new Option(value, value);
+        worldSelect.add(newOption);
+        worldSelect.value = value;
+      }
+      newWorldInput.value = '';
+    }
 
     function updateFps(now) {
       frames++;
@@ -632,13 +719,28 @@
     launchButton.addEventListener('click', () => {
       if (selectedMode === 'server') {
         const address = document.getElementById('serverAddress').value.trim();
-        launchStatus.textContent = 'Launching server: ' + (address || 'unknown server');
+        if (!address) {
+          launchStatus.textContent = 'Enter a server address first.';
+          return;
+        }
+        launchStatus.textContent = 'Launching server: ' + address;
       } else {
-        const world = document.getElementById('worldSelect').value;
+        const world = worldSelect.value;
         launchStatus.textContent = 'Launching single-player world: ' + world;
       }
     });
 
+    addServerBtn.addEventListener('click', addServer);
+    createWorldBtn.addEventListener('click', addWorld);
+    serverList.addEventListener('change', saveServers);
+    newServerInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') addServer();
+    });
+    newWorldInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') addWorld();
+    });
+
+    loadServers();
     requestAnimationFrame(updateFps);
     requestAnimationFrame(updateCoords);
   </script>
