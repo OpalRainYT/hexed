@@ -6,15 +6,17 @@
   <title>Hexed Client</title>
   <style>
     :root {
-      --bg: #0d1420;
-      --panel: #0f1b2b;
-      --panel-alt: #14273d;
-      --line: #39d3a8;
-      --line-soft: rgba(57, 211, 168, 0.28);
-      --text: #edf7ff;
-      --muted: #a9c9dc;
-      --accent: #39d3a8;
-      --accent-2: #7af7d0;
+      --bg: #0b1220;
+      --bg-2: #101b2d;
+      --panel: rgba(16, 27, 45, 0.95);
+      --panel-2: rgba(20, 34, 54, 0.9);
+      --line: #7c9dff;
+      --line-soft: rgba(124, 157, 255, 0.25);
+      --text: #f2f7ff;
+      --muted: #c0d6ee;
+      --accent: #7c9dff;
+      --accent-2: #98beff;
+      --green: #6ee7b7;
       --shadow: rgba(0, 0, 0, 0.35);
     }
 
@@ -24,63 +26,66 @@
       margin: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(180deg, #0a1018 0%, #101b2a 100%);
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #0a1018 0%, #101827 100%);
       color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
       overflow: hidden;
     }
 
-    body { display: flex; flex-direction: column; }
+    body {
+      display: flex;
+      flex-direction: column;
+    }
 
     .topbar {
-      height: 62px;
+      height: 64px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 18px;
-      background: rgba(9, 14, 21, 0.96);
+      padding: 0 20px;
+      background: rgba(7, 11, 18, 0.95);
       border-bottom: 1px solid var(--line-soft);
-      box-shadow: 0 8px 24px var(--shadow);
+      box-shadow: 0 8px 18px var(--shadow);
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 10px;
-      color: var(--accent-2);
       font-weight: 800;
       letter-spacing: 2px;
       text-transform: uppercase;
+      color: var(--accent-2);
     }
 
     .brand-dot {
       width: 12px;
       height: 12px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 0 12px rgba(57, 211, 168, 0.9);
+      background: linear-gradient(135deg, var(--accent), #a3d4ff);
+      box-shadow: 0 0 12px rgba(124, 157, 255, 0.9);
     }
 
-    .status-pill {
-      font-size: 11px;
-      letter-spacing: 1.2px;
-      text-transform: uppercase;
-      color: var(--accent-2);
-      background: rgba(57, 211, 168, 0.08);
+    .account-pill {
+      background: rgba(124, 157, 255, 0.08);
       border: 1px solid var(--line-soft);
       border-radius: 999px;
-      padding: 6px 10px;
+      padding: 7px 12px;
+      color: var(--accent-2);
+      font-size: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
     .app {
-      flex: 1;
       display: grid;
-      grid-template-columns: 250px 1fr 350px;
+      grid-template-columns: 240px 1fr 320px;
+      flex: 1;
       min-height: 0;
     }
 
     .panel {
-      background: rgba(14, 22, 31, 0.92);
+      background: var(--panel);
       border-right: 1px solid var(--line-soft);
     }
 
@@ -90,44 +95,44 @@
     }
 
     .sidebar, .rightbar {
-      overflow-y: auto;
       padding: 16px;
+      overflow-y: auto;
     }
 
-    .group { margin-bottom: 20px; }
+    .sidebar .group,
+    .rightbar .group {
+      margin-bottom: 18px;
+    }
 
     .group-title {
-      color: var(--muted);
       font-size: 11px;
-      letter-spacing: 1.5px;
+      color: var(--muted);
+      letter-spacing: 1.8px;
       text-transform: uppercase;
-      margin-bottom: 10px;
       font-weight: 700;
+      margin-bottom: 10px;
     }
 
     .feature {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 8px;
       background: rgba(255,255,255,0.02);
       border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 10px 12px;
       margin-bottom: 8px;
       cursor: pointer;
       transition: 0.15s ease;
-      color: var(--text);
     }
 
     .feature:hover {
+      background: rgba(124,157,255,0.04);
       border-color: var(--line-soft);
-      background: rgba(57, 211, 168, 0.04);
     }
 
     .feature.active {
-      background: rgba(57, 211, 168, 0.08);
+      background: rgba(124,157,255,0.09);
       border-color: var(--line-soft);
     }
 
@@ -147,48 +152,53 @@
       left: 2px;
       width: 12px;
       height: 12px;
+      background: #fff;
       border-radius: 50%;
-      background: #ffffff;
       transition: 0.15s ease;
     }
 
-    .feature.active .switch { background: var(--accent); }
-    .feature.active .switch::after { left: 17px; }
+    .feature.active .switch {
+      background: var(--accent);
+    }
+
+    .feature.active .switch::after {
+      left: 17px;
+    }
 
     .main-area {
       display: flex;
       flex-direction: column;
+      background: linear-gradient(180deg, rgba(15,25,37,0.7), rgba(9,12,18,0.8));
       min-width: 0;
-      background: linear-gradient(180deg, rgba(15,27,43,0.75), rgba(8,14,20,0.84));
     }
 
     .viewport {
       position: relative;
       flex: 1;
       overflow: hidden;
+      border-bottom: 1px solid var(--line-soft);
       background:
-        linear-gradient(180deg, rgba(12, 18, 27, 0.25), rgba(12,18,27,0.68)),
+        linear-gradient(180deg, rgba(14,22,31,0.24), rgba(10,12,18,0.7)),
         linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px),
         linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-        #0e1824;
+        #0c1623;
       background-size: auto, 24px 24px, 24px 24px, auto;
-      border-bottom: 1px solid var(--line-soft);
     }
 
     .viewport::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: radial-gradient(circle at center, rgba(57, 211, 168, 0.07), transparent 36%);
+      background: radial-gradient(circle at center, rgba(124,157,255,0.08), transparent 35%);
     }
 
     .hud {
       position: absolute;
       left: 18px;
-      top: 16px;
+      top: 18px;
       z-index: 2;
       color: var(--accent-2);
-      text-shadow: 0 0 12px rgba(57, 211, 168, 0.75);
+      text-shadow: 0 0 12px rgba(124,157,255,0.7);
     }
 
     .hud-title {
@@ -199,11 +209,10 @@
 
     .hud-sub {
       margin-top: 6px;
-      color: #d2ecff;
       font-size: 11px;
       letter-spacing: 0.12em;
+      color: #dfeeff;
       text-transform: uppercase;
-      opacity: 0.95;
     }
 
     .stats {
@@ -212,9 +221,9 @@
       top: 18px;
       z-index: 2;
       padding: 10px 12px;
-      background: rgba(9, 14, 21, 0.8);
-      border: 1px solid var(--line-soft);
+      background: rgba(9,14,20,0.8);
       border-radius: 8px;
+      border: 1px solid var(--line-soft);
       font-family: Consolas, monospace;
       font-size: 12px;
       color: var(--accent-2);
@@ -228,7 +237,7 @@
       transform: translate(-50%, -50%);
       width: 18px;
       height: 18px;
-      border: 2px solid rgba(57, 211, 168, 0.9);
+      border: 2px solid rgba(124,157,255,0.9);
       border-radius: 50%;
       z-index: 2;
     }
@@ -237,19 +246,19 @@
     .crosshair::after {
       content: "";
       position: absolute;
-      background: rgba(57, 211, 168, 0.9);
+      background: rgba(124,157,255,0.9);
     }
 
     .crosshair::before {
-      left: 7px;
       top: -8px;
+      left: 7px;
       width: 2px;
       height: 30px;
     }
 
     .crosshair::after {
-      top: 7px;
       left: -8px;
+      top: 7px;
       width: 30px;
       height: 2px;
     }
@@ -259,13 +268,13 @@
       left: 18px;
       bottom: 18px;
       z-index: 2;
-      padding: 8px 12px;
-      background: rgba(9,14,21,0.8);
+      background: rgba(9,14,20,0.8);
       border: 1px solid var(--line-soft);
       border-radius: 8px;
+      padding: 8px 12px;
       font-family: Consolas, monospace;
       font-size: 12px;
-      color: #dafeff;
+      color: #dfeeff;
     }
 
     .bottom-bar {
@@ -274,7 +283,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 18px;
-      background: rgba(9, 14, 21, 0.95);
+      background: rgba(9,14,20,0.95);
       border-top: 1px solid var(--line-soft);
     }
 
@@ -291,19 +300,19 @@
       min-width: 22px;
       text-align: center;
       padding: 4px 7px;
-      border: 1px solid var(--line-soft);
-      background: rgba(57, 211, 168, 0.08);
-      color: var(--accent-2);
       border-radius: 6px;
+      background: rgba(124,157,255,0.08);
+      border: 1px solid var(--line-soft);
+      color: var(--accent-2);
       font-family: Consolas, monospace;
       font-weight: 700;
     }
 
     .action {
-      background: rgba(57, 211, 168, 0.08);
       border: 1px solid var(--line-soft);
-      color: var(--text);
       border-radius: 8px;
+      background: rgba(124,157,255,0.08);
+      color: var(--text);
       padding: 8px 12px;
       cursor: pointer;
       font-weight: 700;
@@ -328,9 +337,8 @@
 
     .row {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      align-items: center;
       padding: 7px 0;
       border-bottom: 1px solid rgba(255,255,255,0.04);
       font-size: 13px;
@@ -339,24 +347,6 @@
     .row:last-child { border-bottom: none; }
     .row .label { color: var(--muted); }
     .row .value { color: var(--accent-2); font-weight: 700; }
-
-    input[type="range"] {
-      width: 100%;
-      accent-color: var(--accent);
-      margin-top: 8px;
-    }
-
-    .button {
-      width: 100%;
-      margin-top: 10px;
-      border: none;
-      border-radius: 8px;
-      background: var(--accent);
-      color: #07130f;
-      font-weight: 800;
-      padding: 10px 12px;
-      cursor: pointer;
-    }
 
     .mode-buttons {
       display: grid;
@@ -368,31 +358,32 @@
     .mode-button {
       background: rgba(255,255,255,0.03);
       border: 1px solid var(--line-soft);
-      border-radius: 8px;
       color: var(--text);
+      border-radius: 8px;
       padding: 10px 8px;
       cursor: pointer;
       font-weight: 700;
     }
 
     .mode-button.active {
-      background: rgba(57, 211, 168, 0.12);
+      background: rgba(124,157,255,0.12);
       border-color: var(--line-soft);
       color: var(--accent-2);
     }
 
     .field-label {
       display: block;
+      margin: 10px 0 6px;
       font-size: 11px;
       color: var(--muted);
-      letter-spacing: 0.12em;
       text-transform: uppercase;
-      margin: 10px 0 6px;
+      letter-spacing: 0.12em;
     }
 
     .text-input,
     .select-input,
-    .server-list {
+    .server-list,
+    .mini-input {
       width: 100%;
       background: rgba(255,255,255,0.02);
       border: 1px solid var(--line-soft);
@@ -405,13 +396,14 @@
 
     .text-input:focus,
     .select-input:focus,
-    .server-list:focus {
+    .server-list:focus,
+    .mini-input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(57, 211, 168, 0.12);
+      box-shadow: 0 0 0 3px rgba(124,157,255,0.12);
     }
 
     .server-list {
-      min-height: 80px;
+      min-height: 90px;
       resize: vertical;
     }
 
@@ -421,39 +413,28 @@
       margin-top: 8px;
     }
 
-    .mini-input {
-      flex: 1;
-      background: rgba(255,255,255,0.02);
+    .mini-input { flex: 1; }
+
+    .small-button {
       border: 1px solid var(--line-soft);
       border-radius: 8px;
-      color: var(--text);
-      padding: 9px 10px;
-      font-size: 13px;
-    }
-
-    .launch-button,
-    .save-button,
-    .add-button {
-      border: none;
-      border-radius: 8px;
-      font-weight: 800;
+      background: rgba(124,157,255,0.08);
+      color: var(--accent-2);
+      padding: 8px 10px;
+      font-weight: 700;
       cursor: pointer;
     }
 
     .launch-button {
       width: 100%;
-      margin-top: 12px;
-      background: linear-gradient(180deg, var(--accent), #1bbd94);
-      color: #07130f;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--accent), #6b87ff);
+      color: #08111d;
       padding: 10px 12px;
-    }
-
-    .save-button,
-    .add-button {
-      background: rgba(57, 211, 168, 0.12);
-      color: var(--accent-2);
-      border: 1px solid var(--line-soft);
-      padding: 9px 10px;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 12px;
     }
 
     .launch-status {
@@ -463,52 +444,50 @@
       color: var(--accent-2);
     }
 
+    input[type="range"] { width: 100%; accent-color: var(--accent); }
+
     ::-webkit-scrollbar { width: 8px; }
     ::-webkit-scrollbar-thumb {
-      background: rgba(57, 211, 168, 0.26);
+      background: rgba(124,157,255,0.26);
       border-radius: 10px;
     }
 
     @media (max-width: 900px) {
-      .app {
-        grid-template-columns: 1fr;
-      }
-      .sidebar, .rightbar {
-        display: none;
-      }
+      .app { grid-template-columns: 1fr; }
+      .sidebar, .rightbar { display: none; }
     }
   </style>
 </head>
 <body>
   <div class="topbar">
     <div class="brand"><span class="brand-dot"></span> Hexed</div>
-    <div class="status-pill">Minecraft 1.20.5</div>
+    <div class="account-pill">User • Online</div>
   </div>
 
   <div class="app">
     <aside class="panel sidebar">
       <div class="group">
-        <div class="group-title">General</div>
-        <div class="feature active"><span>HUD</span><span class="switch"></span></div>
-        <div class="feature"><span>Minimap</span><span class="switch"></span></div>
-        <div class="feature active"><span>Chat</span><span class="switch"></span></div>
-        <div class="feature"><span>Notifications</span><span class="switch"></span></div>
+        <div class="group-title">Combat</div>
+        <div class="feature active"><span>Aura</span><span class="switch"></span></div>
+        <div class="feature"><span>Velocity</span><span class="switch"></span></div>
+        <div class="feature active"><span>Reach</span><span class="switch"></span></div>
+        <div class="feature"><span>Criticals</span><span class="switch"></span></div>
       </div>
 
       <div class="group">
-        <div class="group-title">Graphics</div>
-        <div class="feature active"><span>Brightness</span><span class="switch"></span></div>
-        <div class="feature"><span>V-Sync</span><span class="switch"></span></div>
-        <div class="feature"><span>Shaders</span><span class="switch"></span></div>
-        <div class="feature"><span>Particles</span><span class="switch"></span></div>
+        <div class="group-title">Movement</div>
+        <div class="feature"><span>Speed</span><span class="switch"></span></div>
+        <div class="feature active"><span>Flight</span><span class="switch"></span></div>
+        <div class="feature"><span>NoClip</span><span class="switch"></span></div>
+        <div class="feature active"><span>Sprint</span><span class="switch"></span></div>
       </div>
 
       <div class="group">
-        <div class="group-title">Controls</div>
-        <div class="feature active"><span>Auto Sprint</span><span class="switch"></span></div>
-        <div class="feature"><span>Toggle Sneak</span><span class="switch"></span></div>
-        <div class="feature"><span>Keybinds</span><span class="switch"></span></div>
-        <div class="feature"><span>Mouse Sensitivity</span><span class="switch"></span></div>
+        <div class="group-title">Render</div>
+        <div class="feature active"><span>ESP</span><span class="switch"></span></div>
+        <div class="feature active"><span>Fullbright</span><span class="switch"></span></div>
+        <div class="feature"><span>Tracers</span><span class="switch"></span></div>
+        <div class="feature"><span>Nametags</span><span class="switch"></span></div>
       </div>
     </aside>
 
@@ -516,7 +495,7 @@
       <div class="viewport">
         <div class="hud">
           <div class="hud-title">HEXED</div>
-          <div class="hud-sub">Client UI • version 0.2.0</div>
+          <div class="hud-sub">Client UI • 1.20.5</div>
         </div>
 
         <div class="stats">
@@ -535,7 +514,7 @@
       <div class="bottom-bar">
         <div class="keys">
           <span><span class="key">H</span> HUD</span>
-          <span><span class="key">G</span> Gui</span>
+          <span><span class="key">G</span> GUI</span>
           <span><span class="key">R</span> Reset</span>
         </div>
         <button class="action">Open Settings</button>
@@ -558,7 +537,7 @@
           <textarea id="serverList" class="server-list" spellcheck="false"></textarea>
           <div class="create-row">
             <input id="newServer" class="mini-input" type="text" placeholder="Add server" />
-            <button class="add-button" id="addServerBtn">Add</button>
+            <button class="small-button" id="addServerBtn">Add</button>
           </div>
         </div>
 
@@ -573,8 +552,8 @@
 
           <label class="field-label" for="newWorld">Create World</label>
           <div class="create-row">
-            <input id="newWorld" class="mini-input" type="text" placeholder="New World Name" />
-            <button class="add-button" id="createWorldBtn">Create</button>
+            <input id="newWorld" class="mini-input" type="text" placeholder="New world name" />
+            <button class="small-button" id="createWorldBtn">Create</button>
           </div>
         </div>
 
@@ -594,10 +573,8 @@
         <div class="card-title">Settings</div>
         <div class="row"><span class="label">Brightness</span><span class="value">High</span></div>
         <input type="range" min="0" max="100" value="80" />
-
         <div class="row" style="margin-top: 12px;"><span class="label">Sensitivity</span><span class="value" id="sensVal">1.3</span></div>
         <input type="range" min="0.5" max="3" value="1.3" step="0.1" id="sensRange" />
-
         <button class="button">Save Profile</button>
       </div>
     </aside>
@@ -622,12 +599,7 @@
     const newServerInput = document.getElementById('newServer');
     const newWorldInput = document.getElementById('newWorld');
 
-    const defaultServers = [
-      'play.hypixel.net',
-      'mc.hypixel.net',
-      'play.example.com:25565'
-    ];
-
+    const defaultServers = ['play.hypixel.net', 'play.example.com:25565'];
     let selectedMode = 'single';
     let fps = 60;
     let frames = 0;
@@ -662,7 +634,7 @@
     function addWorld() {
       const value = newWorldInput.value.trim();
       if (!value) return;
-      const exists = Array.from(worldSelect.options).some((option) => option.value === value);
+      const exists = Array.from(worldSelect.options).some(option => option.value === value);
       if (!exists) {
         const newOption = new Option(value, value);
         worldSelect.add(newOption);
