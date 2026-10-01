@@ -1,11 +1,14 @@
 #!/bin/bash
-# Hexed Client Launcher for macOS and Linux
-# Opens the Hexed client in your default browser
+# Hexed launcher for Linux/macOS.
+# Opens the local Hexed client page from the same directory.
 
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    xdg-open https://opalrainyc.github.io/hexed/
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-    open https://opalrainyc.github.io/hexed/
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+if command -v xdg-open >/dev/null 2>&1; then
+  xdg-open "$SCRIPT_DIR/index.html"
+elif command -v open >/dev/null 2>&1; then
+  open "$SCRIPT_DIR/index.html"
 else
-    echo "Unsupported OS"
+  echo "Could not open index.html automatically. Open it manually from this folder."
+  exit 1
 fi

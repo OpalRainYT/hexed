@@ -1,6 +1,7 @@
 @echo off
-REM Hexed Client Launcher for Windows
-REM Opens the Hexed client in your default browser
+REM Hexed launcher for Windows
+REM Opens the local Hexed client page from this folder.
 
-start https://opalrainyc.github.io/hexed/
-pause
+cd /d "%~dp0"
+start "" "index.html"
+exit /b 0

@@ -1,162 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hexed Launcher</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #e0e0e0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .launcher-container {
-            text-align: center;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 60px 40px;
-            border-radius: 20px;
-            border: 2px solid #00ffaa;
-            box-shadow: 0 0 30px rgba(0, 255, 170, 0.3);
-            max-width: 400px;
-            animation: slideIn 0.6s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .logo {
-            font-size: 48px;
-            font-weight: bold;
-            color: #00ffaa;
-            text-shadow: 0 0 20px #00ffaa;
-            margin-bottom: 20px;
-            letter-spacing: 2px;
-        }
-
-        .version {
-            font-size: 14px;
-            color: #9fe7ff;
-            margin-bottom: 10px;
-        }
-
-        .description {
-            font-size: 14px;
-            color: #7cff93;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
-
-        .launch-btn {
-            background: linear-gradient(135deg, #00ffaa, #00cc88);
-            color: #000;
-            border: none;
-            padding: 14px 40px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 20px rgba(0, 255, 170, 0.5);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 10px;
-        }
-
-        .launch-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 255, 170, 0.8);
-        }
-
-        .launch-btn:active {
-            transform: scale(0.98);
-        }
-
-        .info-box {
-            background: rgba(0, 255, 170, 0.1);
-            border: 1px solid #00ffaa;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 25px;
-            font-size: 12px;
-            color: #9fe7ff;
-        }
-
-        .loading {
-            display: none;
-            margin-top: 20px;
-            color: #00ffaa;
-        }
-
-        .spinner {
-            border: 3px solid rgba(0, 255, 170, 0.2);
-            border-top: 3px solid #00ffaa;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hexed Launcher</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0d1320, #101826);
+      color: #ecfffb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .panel {
+      width: min(420px, 90vw);
+      border: 2px solid #21f0b1;
+      border-radius: 18px;
+      background: rgba(13, 19, 32, 0.9);
+      box-shadow: 0 0 20px rgba(33, 240, 177, 0.22);
+      padding: 36px 28px;
+      text-align: center;
+    }
+    .logo {
+      font-size: 42px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #21f0b1;
+      margin-bottom: 10px;
+      text-shadow: 0 0 16px rgba(33, 240, 177, 0.6);
+    }
+    .subtitle {
+      font-size: 14px;
+      color: #a5d8ff;
+      margin-bottom: 24px;
+    }
+    .launch-btn {
+      background: linear-gradient(180deg, #21f0b1, #1bbd94);
+      color: #081814;
+      font-size: 18px;
+      font-weight: 800;
+      border: none;
+      border-radius: 10px;
+      padding: 14px 28px;
+      cursor: pointer;
+      transition: 0.18s ease;
+    }
+    .launch-btn:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 22px rgba(33, 240, 177, 0.6);
+    }
+    .status {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #8fe9d0;
+      min-height: 18px;
+    }
+  </style>
 </head>
 <body>
-    <div class="launcher-container">
-        <div class="logo">⬡ HEXED</div>
-        <div class="version">v0.2.0 • Minecraft 1.20.5</div>
-        <div class="description">Advanced Chromebook Client</div>
+  <div class="panel">
+    <div class="logo">HEXED</div>
+    <div class="subtitle">Minecraft 1.20.5 • Chromebook Client</div>
+    <button class="launch-btn" onclick="launchClient()">LAUNCH CLIENT</button>
+    <div class="status" id="status">Ready</div>
+  </div>
 
-        <button class="launch-btn" onclick="launchClient()">LAUNCH CLIENT</button>
+  <script>
+    function launchClient() {
+      const status = document.getElementById('status');
+      status.textContent = 'Opening client...';
 
-        <div class="info-box">
-            <strong>Tip:</strong> The client will open in your browser. Make sure JavaScript is enabled.
-        </div>
+      const target = 'index.html';
+      const finalUrl = new URL(target, window.location.href).toString();
 
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Launching...</p>
-        </div>
-    </div>
-
-    <script>
-        function launchClient() {
-            const btn = document.querySelector('.launch-btn');
-            const loading = document.getElementById('loading');
-            
-            btn.style.display = 'none';
-            loading.style.display = 'block';
-            
-            setTimeout(() => {
-                window.location.href = 'index.html';
-            }, 500);
-        }
-
-        // Auto-launch after 2 seconds if user doesn't click
-        // Uncomment the line below to enable auto-launch
-        // setTimeout(() => { launchClient(); }, 2000);
-    </script>
+      setTimeout(() => {
+        window.location.href = finalUrl;
+      }, 250);
+    }
+  </script>
 </body>
 </html>
